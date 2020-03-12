@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header />
+    <Header :numCorrect="numCorrect" :numTotal="numTotal" />
 
     <b-container class="bv-example-row">
       <b-row>
@@ -9,6 +9,7 @@
             v-if="questions.length"
             :currentQuestion="questions[index]"
             :next="next"
+            :increment="increment"
           />
         </b-col>
       </b-row>
@@ -17,8 +18,8 @@
 </template>
 
 <script>
-import Header from "./components/Header.vue"
-import QuestionBox from "./components/QuestionBox.vue"
+import Header from "./components/Header.vue";
+import QuestionBox from "./components/QuestionBox.vue";
 
 export default {
   name: "App",
@@ -29,12 +30,20 @@ export default {
   data() {
     return {
       questions: [],
-      index: 0
-    }
+      index: 0,
+      numCorrect: 0,
+      numTotal: 0
+    };
   },
   methods: {
     next() {
-      this.index++
+      this.index++;
+    },
+    increment(isCorrect) {
+      if (isCorrect) {
+        this.numCorrect++;
+      }
+      this.numTotal++;
     }
   },
   mounted: function() {
@@ -42,13 +51,13 @@ export default {
       method: "get"
     })
       .then(response => {
-        return response.json()
+        return response.json();
       })
       .then(jsonData => {
-        this.questions = jsonData.results
-      })
+        this.questions = jsonData.results;
+      });
   }
-}
+};
 </script>
 
 <style>
